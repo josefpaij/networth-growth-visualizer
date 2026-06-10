@@ -1,0 +1,538 @@
+:root {
+  color: var(--ink);
+  background: var(--bg);
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  --bg: #f7f5ef;
+  --bg-overlay: rgba(255, 255, 255, 0.7);
+  --panel: rgba(255, 255, 255, 0.88);
+  --panel-solid: #ffffff;
+  --ink: #17211f;
+  --muted: #62706c;
+  --line: #d8ded6;
+  --shadow: 0 22px 60px rgba(31, 42, 38, 0.12);
+  --green: #1b7f5f;
+  --callout-bg: #fff9ea;
+  --callout-ink: #625237;
+  --purple-bg: #f6f0fb;
+  --purple-ink: #554264;
+  --blue-bg: #eef6fb;
+  --blue-ink: #405466;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  min-width: 320px;
+  min-height: 100vh;
+  margin: 0;
+  background: var(--bg);
+}
+
+button,
+input,
+select {
+  font: inherit;
+}
+
+.app {
+  position: relative;
+  width: min(1440px, 100%);
+  height: 100vh;
+  margin: 0 auto;
+  padding: 24px;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  overflow: hidden;
+  background:
+    linear-gradient(180deg, var(--bg-overlay), rgba(255, 255, 255, 0)),
+    var(--bg);
+  color: var(--ink);
+  color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+  --bg: #101513;
+  --bg-overlay: rgba(31, 43, 39, 0.78);
+  --panel: rgba(22, 30, 27, 0.92);
+  --panel-solid: #19231f;
+  --ink: #edf4f1;
+  --muted: #9aa9a4;
+  --line: #32423c;
+  --shadow: 0 22px 60px rgba(0, 0, 0, 0.35);
+  --green: #4fc08f;
+  --callout-bg: #2a2316;
+  --callout-ink: #e2c98d;
+  --purple-bg: #241c2d;
+  --purple-ink: #d8c1f0;
+  --blue-bg: #172532;
+  --blue-ink: #b9d5ed;
+}
+
+.app.darkMode {
+  color-scheme: dark;
+}
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(420px, 0.7fr);
+  gap: 24px;
+  align-items: end;
+  margin-bottom: 18px;
+}
+
+h1 {
+  max-width: 760px;
+  margin: 0;
+  font-size: clamp(2.25rem, 5vw, 4.75rem);
+  line-height: 0.95;
+  letter-spacing: 0;
+}
+
+.themeSwitch {
+  position: fixed;
+  top: 18px;
+  right: max(12px, calc((100vw - 1440px) / 2 - 88px));
+  z-index: 20;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  padding: 3px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--panel-solid) 78%, transparent);
+  box-shadow: 0 10px 28px rgba(31, 42, 38, 0.12);
+  backdrop-filter: blur(14px);
+  cursor: pointer;
+  overflow: hidden;
+  border-color: var(--line);
+  color: var(--muted);
+  transition:
+    border-color 160ms ease,
+    color 160ms ease,
+    transform 160ms ease;
+}
+
+.themeSwitch:hover {
+  color: var(--ink);
+  transform: translateY(-1px);
+}
+
+.themeSwitch:focus-visible {
+  outline: 3px solid rgba(79, 192, 143, 0.3);
+  outline-offset: 3px;
+}
+
+.themeThumb {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 6px 18px rgba(27, 127, 95, 0.25);
+  transition: transform 220ms ease;
+}
+
+.themeSwitch.darkActive .themeThumb {
+  transform: translateX(32px);
+}
+
+.themeIcon {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  width: 32px;
+  height: 32px;
+  place-items: center;
+  color: var(--muted);
+  transition: color 180ms ease;
+}
+
+.themeSwitch.lightActive .sunIcon,
+.themeSwitch.darkActive .moonIcon {
+  color: var(--panel-solid);
+}
+
+.themeSwitch svg {
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2;
+}
+
+.themeSwitch svg circle {
+  fill: currentColor;
+  stroke: currentColor;
+}
+
+.hero p {
+  max-width: 720px;
+  margin: 14px 0 0;
+  color: var(--muted);
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(145px, 1fr));
+  gap: 10px;
+}
+
+.metrics article,
+.chartPanel,
+.controls {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel);
+  box-shadow: var(--shadow);
+}
+
+.metrics article {
+  padding: 14px;
+  box-shadow: none;
+}
+
+.metrics span,
+.field span,
+.control span {
+  display: block;
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.metrics strong {
+  display: block;
+  margin-top: 6px;
+  font-size: clamp(1.05rem, 2vw, 1.35rem);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.workspace {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(340px, 380px);
+  gap: 18px;
+  align-items: start;
+  min-height: 0;
+  --workspace-height: 100%;
+}
+
+.chartPanel {
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) clamp(112px, 16vh, 150px);
+  gap: 14px;
+  min-height: var(--workspace-height);
+  height: var(--workspace-height);
+  padding: 18px 18px 8px;
+}
+
+.mainChart,
+.incomeChart {
+  position: relative;
+  min-height: 0;
+}
+
+.incomeChart {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: 4px;
+  padding-top: 8px;
+  border-top: 1px solid var(--line);
+}
+
+.incomeChart span {
+  color: var(--callout-ink);
+  font-size: 0.78rem;
+  font-weight: 750;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.sourceToggles {
+  display: grid;
+  gap: 10px;
+}
+
+.controls {
+  position: sticky;
+  top: 18px;
+  display: grid;
+  gap: 18px;
+  max-height: var(--workspace-height);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 18px;
+  scrollbar-gutter: stable;
+}
+
+.fieldGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.field,
+.control {
+  display: grid;
+  gap: 8px;
+}
+
+.control span {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.control strong {
+  color: var(--ink);
+  font-size: 0.95rem;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+input[type="range"] {
+  width: 100%;
+  accent-color: var(--green);
+}
+
+.sliderRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 84px;
+  gap: 10px;
+  align-items: center;
+}
+
+.sliderNumber {
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+input[type="number"],
+select {
+  width: 100%;
+  min-width: 0;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  background: var(--panel-solid);
+  color: var(--ink);
+  padding: 10px 11px;
+  outline: none;
+}
+
+input[type="number"]:focus,
+select:focus {
+  border-color: var(--green);
+  box-shadow: 0 0 0 3px rgba(27, 127, 95, 0.14);
+}
+
+.incomeBox,
+.inflationBox,
+.retirementBox,
+.monthBox {
+  display: grid;
+  gap: 14px;
+  border-top: 1px solid var(--line);
+  padding-top: 18px;
+}
+
+.monthBox {
+  border-top: 0;
+  padding: 14px;
+  border-radius: 8px;
+  background: var(--panel-solid);
+  border: 1px solid var(--line);
+}
+
+.monthBox span {
+  display: block;
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.monthBox strong {
+  display: block;
+  margin-top: 4px;
+  font-size: 1rem;
+}
+
+.monthHeader {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.monthHeader button {
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  background: var(--panel-solid);
+  color: var(--muted);
+  cursor: pointer;
+  padding: 7px 10px;
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.monthHeader button:hover {
+  border-color: var(--green);
+  color: var(--green);
+}
+
+.sectionHead {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+}
+
+h2 {
+  margin: 0;
+  font-size: 1rem;
+  letter-spacing: 0;
+}
+
+.segmented {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-width: 190px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel-solid);
+}
+
+.segmented button {
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  padding: 9px 10px;
+}
+
+.segmented button.active {
+  background: var(--green);
+  color: var(--panel-solid);
+  font-weight: 750;
+}
+
+.incomeBox p,
+.inflationBox p,
+.retirementNote {
+  margin: 0;
+  border-left: 4px solid #c18b2e;
+  border-radius: 0 8px 8px 0;
+  background: var(--callout-bg);
+  color: var(--callout-ink);
+  padding: 12px;
+  font-size: 0.9rem;
+  line-height: 1.42;
+}
+
+.inflationBox p {
+  border-left-color: #7b4fa3;
+  background: var(--purple-bg);
+  color: var(--purple-ink);
+}
+
+.retirementNote {
+  border-left-color: #2d6f9f;
+  background: var(--blue-bg);
+  color: var(--blue-ink);
+}
+
+dl {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+}
+
+dl div {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 10px;
+  align-items: baseline;
+}
+
+dt {
+  color: var(--muted);
+  font-size: 0.86rem;
+}
+
+dd {
+  margin: 0;
+  font-weight: 750;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+@media (max-width: 1060px) {
+  .app {
+    height: auto;
+    min-height: 100vh;
+    overflow: visible;
+  }
+
+  .hero,
+  .workspace {
+    grid-template-columns: 1fr;
+  }
+
+  .controls {
+    position: static;
+    max-height: none;
+    overflow: visible;
+    order: -1;
+  }
+
+  .chartPanel {
+    grid-template-rows: minmax(300px, 1fr) 125px;
+    height: clamp(480px, 70vh, 760px);
+    min-height: 480px;
+  }
+}
+
+@media (max-width: 680px) {
+  .app {
+    padding: 16px;
+  }
+
+  .metrics,
+  .fieldGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .sectionHead {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .segmented {
+    min-width: 0;
+  }
+
+  .chartPanel {
+    grid-template-rows: minmax(260px, 1fr) 118px;
+    height: clamp(410px, 68vh, 620px);
+    min-height: 410px;
+    padding: 12px 8px 4px;
+  }
+
+  .sliderRow {
+    grid-template-columns: minmax(0, 1fr) 76px;
+  }
+}
