@@ -1,10 +1,12 @@
 import {
   BarElement,
+  BarController,
   CategoryScale,
   Chart as ChartJS,
   Filler,
   Legend,
   LinearScale,
+  LineController,
   LineElement,
   LogarithmicScale,
   PointElement,
@@ -15,9 +17,11 @@ import { useEffect, useMemo, useState } from "react";
 import { Chart } from "react-chartjs-2";
 
 ChartJS.register(
+  BarController,
   BarElement,
   CategoryScale,
   LinearScale,
+  LineController,
   LogarithmicScale,
   PointElement,
   LineElement,
